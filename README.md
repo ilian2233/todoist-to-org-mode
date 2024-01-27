@@ -10,9 +10,6 @@ Recently discovered [orgzly](https://orgzly.com/) and decided to make the switch
 - Todoist API - The script uses `v2` of the [todoist api](https://developer.todoist.com/rest/v2/#delete-a-section).
 
 ## Flags
-- Api key
-  - name: `--key`
-  - short: `-k`
 
 | full name  | short name | description                                                                                                                            |
 |------------|------------|----------------------------------------------------------------------------------------------------------------------------------------|
