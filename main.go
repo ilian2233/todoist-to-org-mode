@@ -55,7 +55,7 @@ func main() {
 	}
 
 	if destination != "" {
-		if err = os.WriteFile("destination", buf.Bytes(), 0666); err != nil {
+		if err = os.WriteFile(destination, buf.Bytes(), 0666); err != nil {
 			panic(err)
 		}
 	} else {
