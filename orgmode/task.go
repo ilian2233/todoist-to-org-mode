@@ -1,15 +1,18 @@
 package orgmode
 
-import "fmt"
+import (
+	"fmt"
+	"time"
+)
 
 type Task struct {
-	Title       string //TODO: Titles may contain markdown style links
-	Description string //TODO: Add to ToString
-	Date        string //TODO: Add to ToString
-	Priority    rune   //TODO: Add to ToString
-	IsRecurring bool
-	Subtasks    []*Task
-	HasParent   bool
+	Title             string    //TODO: Titles may contain markdown style links
+	Description       string    //TODO: Add to ToString
+	Date              time.Time //TODO: Add to ToString
+	Priority          rune      //TODO: Add to ToString
+	RecurringDuration time.Duration
+	Subtasks          []*Task
+	HasParent         bool
 }
 
 func (t Task) ToString() string {

@@ -19,27 +19,27 @@ type Project struct {
 	ParentID       any    `json:"parent_id"`
 }
 
-func (tp Project) GetID() string {
-	return tp.ID
+func (p Project) GetID() string {
+	return p.ID
 }
 
-func (tp Project) GetParentID() string {
-	PID, ok := tp.ParentID.(string)
+func (p Project) GetParentID() string {
+	PID, ok := p.ParentID.(string)
 	if !ok {
 		return ""
 	}
 	return PID
 }
 
-func (tp Project) ToTask() *orgmode.Task {
+func (p Project) ToTask() *orgmode.Task {
 	return &orgmode.Task{
-		Title:     tp.Name,
-		HasParent: tp.hasParent(),
+		Title:     p.Name,
+		HasParent: p.hasParent(),
 	}
 }
 
-func (tp Project) hasParent() bool {
-	if tp.GetParentID() == "" {
+func (p Project) hasParent() bool {
+	if p.GetParentID() == "" {
 		return false
 	}
 	return true

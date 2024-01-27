@@ -1,5 +1,7 @@
 package orgmode
 
+import "bytes"
+
 type TaskCreator []PreOrgTask
 
 type PreOrgTask interface {
@@ -44,4 +46,14 @@ func (s *TaskCreator) CreateOrgmodeTasks() []Task {
 		}
 	}
 	return parentlessTasks
+}
+
+func TasksToBuffer(tasks []Task) (bytes.Buffer, error) {
+	var buf bytes.Buffer
+	for _, v := range tasks {
+		if _, err := buf.WriteString(v.ToString()); err != nil {
+			return bytes.Buffer{}, err
+		}
+	}
+	return buf, nil
 }

@@ -14,15 +14,9 @@ type todoistTaskDate struct {
 }
 
 // TODO: Add dates and recurring dates
-func (d todoistTaskDate) toOrgDate() string {
+func (d todoistTaskDate) toCommonDateTime() time.Time {
 	//panic("not implemented")
-	return ""
-}
-
-type todoistPriority int
-
-func (p todoistPriority) toOrgPriority() rune {
-	return rune('A' - 1 + p)
+	return time.Time{}
 }
 
 type Task struct {
@@ -39,34 +33,42 @@ type Task struct {
 	ID           string          `json:"id"`
 	Labels       []string        `json:"labels"`
 	Order        int             `json:"order"`
-	Priority     todoistPriority `json:"priority"`
+	Priority     int             `json:"priority"`
 	ProjectID    string          `json:"project_id"`
 	SectionID    string          `json:"section_id"`
 	ParentID     string          `json:"parent_id"`
 	URL          string          `json:"url"`
 }
 
-func (tt Task) GetID() string {
-	return tt.ID
+func (t Task) GetID() string {
+	return t.ID
 }
 
-func (tt Task) GetParentID() string {
-	return tt.ParentID
+func (t Task) GetParentID() string {
+	return t.ParentID
 }
 
-func (tt Task) ToTask() *orgmode.Task {
+func (t Task) ToTask() *orgmode.Task {
 	return &orgmode.Task{
-		Title:       tt.Content,
-		Description: tt.Description,
-		Date:        tt.Due.toOrgDate(),
-		Priority:    tt.Priority.toOrgPriority(),
-		IsRecurring: tt.Due.IsRecurring,
-		HasParent:   tt.hasParent(),
+		Title:             t.Content,
+		Description:       t.Description,
+		Date:              t.Due.toCommonDateTime(),
+		Priority:          t.getPriority(),
+		RecurringDuration: t.getRecurringPeriod(),
+		HasParent:         t.hasParent(),
 	}
 }
 
-func (tt Task) hasParent() bool {
-	if tt.ParentID == "" {
+func (t Task) getPriority() rune {
+	return rune('A' - 1 + t.Priority)
+}
+
+func (t Task) getRecurringPeriod() time.Duration {
+	return time.Duration(10)
+}
+
+func (t Task) hasParent() bool {
+	if t.ParentID == "" {
 		return false
 	}
 	return true
