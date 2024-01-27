@@ -2,6 +2,7 @@ package todoist
 
 import (
 	"fmt"
+	"strings"
 	"time"
 	"todoist-to-org-mode/orgmode"
 )
@@ -16,11 +17,11 @@ type Task struct {
 	Content      string    `json:"content"`
 	Description  string    `json:"description"`
 	Due          *struct {
-		Date        string    `json:"date"`
-		IsRecurring bool      `json:"is_recurring"`
-		Datetime    time.Time `json:"datetime"`
-		String      string    `json:"string"`
-		Timezone    string    `json:"timezone"`
+		Date        string `json:"date"`
+		IsRecurring bool   `json:"is_recurring"`
+		Datetime    string `json:"datetime"`
+		String      string `json:"string"`
+		Timezone    string `json:"timezone"`
 	} `json:"due"`
 	Duration  any      `json:"duration"`
 	ID        string   `json:"id"`
@@ -48,12 +49,12 @@ func (t Task) ToTask() (*orgmode.Task, error) {
 	}
 
 	return &orgmode.Task{
-		Title:             t.Content,
-		Description:       t.Description,
-		Date:              taskDate,
-		Priority:          t.getPriority(),
-		RecurringDuration: t.getRecurringPeriod(),
-		HasParent:         t.hasParent(),
+		Title:       t.Content,
+		Description: t.Description,
+		Date:        taskDate,
+		Priority:    t.getPriority(),
+		//RecurringDuration: t.getRecurringPeriod(),
+		HasParent: t.hasParent(),
 	}, nil
 }
 
@@ -61,8 +62,9 @@ func (t Task) getDate() (time.Time, error) {
 	if t.Due == nil {
 		return time.Time{}, nil
 	}
-	if !t.Due.Datetime.IsZero() {
-		return t.Due.Datetime, nil
+	if t.Due.Datetime != "" {
+		formattedDate := strings.Replace(t.Due.Datetime, "T", " ", 1)
+		return time.Parse(time.DateTime, formattedDate)
 	}
 	if t.Due.Date != "" { //This check should not be needed as far as I can see if Due is not null date is always set, but just to be sure.
 		return time.Parse(time.DateOnly, t.Due.Date)
@@ -85,7 +87,7 @@ func (t Task) getPriority() rune {
 }
 
 func (t Task) getRecurringPeriod() time.Duration {
-	return time.Duration(10)
+	panic("implement")
 }
 
 func (t Task) hasParent() bool {
