@@ -55,7 +55,11 @@ func (s *TaskCreator) CreateOrgmodeTasks() ([]Task, error) {
 func TasksToBuffer(tasks []Task) (bytes.Buffer, error) {
 	var buf bytes.Buffer
 	for _, v := range tasks {
-		if _, err := buf.WriteString(v.ToString()); err != nil {
+		taskString, err := v.ToString()
+		if err != nil {
+			return bytes.Buffer{}, err
+		}
+		if _, err = buf.WriteString(taskString); err != nil {
 			return bytes.Buffer{}, err
 		}
 	}
