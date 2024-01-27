@@ -55,7 +55,7 @@ func (t Task) getDateTime() string {
 	if t.Date.Hour() != 0 || t.Date.Minute() != 0 {
 		taskTime = fmt.Sprintf(" %02d:%02d", t.Date.Hour(), t.Date.Minute())
 	}
-	return fmt.Sprintf("\n\t<%d-%d-%d %.3s%s>", t.Date.Year(), t.Date.Month(), t.Date.Day(), t.Date.Weekday().String(), taskTime)
+	return fmt.Sprintf("\nSCHEDULED: <%02d-%02d-%02d %.3s%s>", t.Date.Year(), t.Date.Month(), t.Date.Day(), t.Date.Weekday().String(), taskTime)
 }
 
 func (t Task) getDescription() string {
@@ -63,7 +63,7 @@ func (t Task) getDescription() string {
 		return ""
 	}
 	sanitizedDescription := strings.ReplaceAll(t.Description, "\n", ",\t")
-	return fmt.Sprintf("\n\t%s", sanitizedDescription)
+	return fmt.Sprintf("\n%s", sanitizedDescription)
 }
 
 func (t Task) getSubtasks() (string, error) {
