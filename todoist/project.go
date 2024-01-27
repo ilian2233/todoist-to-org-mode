@@ -31,11 +31,11 @@ func (p Project) GetParentID() string {
 	return PID
 }
 
-func (p Project) ToTask() *orgmode.Task {
+func (p Project) ToTask() (*orgmode.Task, error) {
 	return &orgmode.Task{
 		Title:     p.Name,
 		HasParent: p.hasParent(),
-	}
+	}, nil
 }
 
 func (p Project) hasParent() bool {

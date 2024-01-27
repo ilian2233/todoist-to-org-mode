@@ -7,14 +7,14 @@ type TaskCreator []PreOrgTask
 type PreOrgTask interface {
 	GetID() string
 	GetParentID() string
-	ToTask() *Task
+	ToTask() (*Task, error)
 }
 
 func (s *TaskCreator) Add(item PreOrgTask) {
 	*s = append(*s, item)
 }
 
-func (s *TaskCreator) CreateOrgmodeTasks() []Task {
+func (s *TaskCreator) CreateOrgmodeTasks() ([]Task, error) {
 	tasksMap := map[string]*Task{}
 
 	// Iterate over todoist tasksMap until all in the org-mode tasksMap map
@@ -24,14 +24,18 @@ func (s *TaskCreator) CreateOrgmodeTasks() []Task {
 			if _, ok := tasksMap[object.GetID()]; ok {
 				continue
 			}
+			task, err := object.ToTask()
+			if err != nil {
+				return nil, err
+			}
 			// If no parent add to map
 			if object.GetParentID() == "" {
-				tasksMap[object.GetID()] = object.ToTask()
+				tasksMap[object.GetID()] = task
 				continue
 			}
 			// If parent exists in map add to map and to parent task
 			if _, ok := tasksMap[object.GetParentID()]; ok {
-				currentTask := object.ToTask()
+				currentTask := task
 				tasksMap[object.GetID()] = currentTask
 				parent := tasksMap[object.GetParentID()]
 				parent.Subtasks = append(parent.Subtasks, currentTask)
@@ -45,7 +49,7 @@ func (s *TaskCreator) CreateOrgmodeTasks() []Task {
 			parentlessTasks = append(parentlessTasks, *v)
 		}
 	}
-	return parentlessTasks
+	return parentlessTasks, nil
 }
 
 func TasksToBuffer(tasks []Task) (bytes.Buffer, error) {

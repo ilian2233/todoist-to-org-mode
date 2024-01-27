@@ -44,7 +44,10 @@ func main() {
 		taskCreator.Add(v)
 	}
 
-	orgmodeTasks := taskCreator.CreateOrgmodeTasks()
+	orgmodeTasks, err := taskCreator.CreateOrgmodeTasks()
+	if err != nil {
+		panic(err)
+	}
 
 	buf, err := orgmode.TasksToBuffer(orgmodeTasks)
 	if err != nil {
